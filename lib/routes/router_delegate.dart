@@ -3,6 +3,7 @@ import 'package:presensi/data/api/api_auth.dart';
 import 'package:presensi/data/model/page_configuration.dart';
 import 'package:presensi/provider/home/presensi_provider.dart';
 import 'package:presensi/screen/auth/login_screen.dart';
+import 'package:presensi/screen/history/history_screen.dart';
 import 'package:presensi/screen/home/home_screen.dart';
 import 'package:presensi/screen/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,8 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
   @override
   GlobalKey<NavigatorState>? get navigatorKey => _navigatorKey;
 
+  bool isHistory = false;
+
   @override
   Widget build(BuildContext context) {
     if (isLoggedIn == null) {
@@ -52,7 +55,14 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
     return Navigator(
       key: navigatorKey,
       pages: historyStack,
-      onDidRemovePage: (page) {},
+      onDidRemovePage: (page) {
+        if (page.key == const ValueKey("HistoryScreen")) {
+          isHistory = false;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            notifyListeners();
+          });
+        }
+      },
     );
   }
 
@@ -85,12 +95,18 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
     MaterialPage(
       key: const ValueKey("HomePage"),
       child: HomeScreen(
+        toHistoryScreen: () {
+          isHistory = true;
+          notifyListeners();
+        },
         onLogout: () {
           isLoggedIn = false;
           notifyListeners();
         },
       ),
     ),
+    if (isHistory)
+      MaterialPage(key: ValueKey("HistoryScreen"), child: HistoryScreen()),
   ];
 
   @override

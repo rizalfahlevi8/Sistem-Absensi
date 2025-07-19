@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:presensi/data/model/presensi_list_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,6 +23,22 @@ class ApiPresensi {
       };
     } else {
       throw Exception('Failed to check presensi');
+    }
+  }
+
+   Future<PresensiListResponse> indexUser([int page = 1, int size = 10]) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+
+    final response = await http.get(
+      Uri.parse("$_baseUrl/presensi/indexUser?page=$page&size=$size"),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return PresensiListResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to load story list");
     }
   }
 

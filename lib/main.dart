@@ -3,6 +3,7 @@ import 'package:presensi/data/api/api_auth.dart';
 import 'package:presensi/data/api/api_presensi.dart';
 import 'package:presensi/my_app.dart';
 import 'package:presensi/provider/auth/auth_provider.dart';
+import 'package:presensi/provider/history/presensi_history_provider.dart';
 import 'package:presensi/provider/home/presensi_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,7 @@ void main() {
         Provider(create: (context) => ApiPresensi()),
         ChangeNotifierProvider(create: (context) => authProvider),
         ChangeNotifierProvider(create: (context) => PresensiProvider(apiPresensi: ApiPresensi())),
+        ChangeNotifierProvider(create: (context) => PresensiHistoryProvider(ApiPresensi())),
       ],
       child: MyApp(authRepository: authRepository),
     ),

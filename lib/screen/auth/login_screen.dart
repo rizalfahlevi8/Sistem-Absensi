@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:presensi/provider/auth/auth_provider.dart';
+import 'package:presensi/provider/history/presensi_history_provider.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function() onLogin;
 
-  const LoginScreen({
-    super.key,
-    required this.onLogin,
-  });
+  const LoginScreen({super.key, required this.onLogin});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -34,10 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Presensi",
-          style: Theme.of(context).textTheme.labelSmall,
-        ),
+        title: Text("Presensi", style: Theme.of(context).textTheme.labelSmall),
         centerTitle: true,
       ),
       body: Center(
@@ -48,7 +43,11 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.lock_outline, size: 80, color: Colors.blueAccent),
+                const Icon(
+                  Icons.lock_outline,
+                  size: 80,
+                  color: Colors.blueAccent,
+                ),
                 const SizedBox(height: 16),
                 Text(
                   "Selamat Datang",
@@ -68,7 +67,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: InputDecoration(
                     labelText: "Email",
                     prefixIcon: const Icon(Icons.email_outlined),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -92,7 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                       ),
                       onPressed: () {
                         setState(() {
@@ -100,7 +103,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         });
                       },
                     ),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -115,32 +120,37 @@ class _LoginScreenState extends State<LoginScreen> {
                 isLoading
                     ? const CircularProgressIndicator()
                     : SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          onPressed: () async {
-                            if (formKey.currentState!.validate()) {
-                              final result = await context.read<AuthProvider>().login(
-                                    emailController.text,
-                                    passwordController.text,
-                                  );
-                              if (result == true) {
-                                widget.onLogin();
-                              } else if (result is String) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(result)),
-                                );
-                              }
-                            }
-                          },
-                          child: Text("Masuk", style: TextStyle(fontSize: 16)),
                         ),
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            final result = await context
+                                .read<AuthProvider>()
+                                .login(
+                                  emailController.text,
+                                  passwordController.text,
+                                );
+                            if (result == true) {
+                              widget.onLogin();
+                              context
+                                  .read<PresensiHistoryProvider>()
+                                  .fetchPresensiList(reset: true);
+                            } else if (result is String) {
+                              ScaffoldMessenger.of(
+                                context,
+                              ).showSnackBar(SnackBar(content: Text(result)));
+                            }
+                          }
+                        },
+                        child: Text("Masuk", style: TextStyle(fontSize: 16)),
                       ),
+                    ),
                 const SizedBox(height: 16),
               ],
             ),
