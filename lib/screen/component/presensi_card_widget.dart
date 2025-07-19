@@ -41,20 +41,6 @@ class PresensiCardWidget extends StatelessWidget {
     }
   }
 
-  // Helper method untuk mendapatkan warna berdasarkan status
-  Color _getStatusColor() {
-    switch (presensi.status.toLowerCase()) {
-      case 'tepat-waktu':
-        return const Color(0xFF4CAF50);
-      case 'terlambat':
-        return const Color(0xFFF44336);
-      case 'pulang-dulu':
-        return const Color(0xFFFF9800);
-      default:
-        return const Color(0xFF9E9E9E);
-    }
-  }
-
   // Helper method untuk mendapatkan icon berdasarkan status
   IconData _getStatusIcon() {
     switch (presensi.status.toLowerCase()) {

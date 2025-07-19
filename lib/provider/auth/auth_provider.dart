@@ -6,6 +6,7 @@ class AuthProvider extends ChangeNotifier {
 
   AuthProvider(this.apiAuth);
 
+  bool isLoadingRegister = false;
   bool isLoadingLogin = false;
   bool isLoadingLogout = false;
 
@@ -19,6 +20,33 @@ class AuthProvider extends ChangeNotifier {
       return result;
     } catch (e) {
       isLoadingLogin = false;
+      notifyListeners();
+      return "Something went wrong.";
+    }
+  }
+
+  Future<dynamic> register(
+    String nama,
+    String gender,
+    String id_kelas,
+    String email,
+    String password,
+  ) async {
+    isLoadingRegister = true;
+    notifyListeners();
+    try {
+      final result = await apiAuth.register(
+        nama,
+        gender,
+        id_kelas,
+        email,
+        password,
+      );
+      isLoadingRegister = false;
+      notifyListeners();
+      return result;
+    } catch (e) {
+      isLoadingRegister = false;
       notifyListeners();
       return "Something went wrong.";
     }

@@ -5,8 +5,13 @@ import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function() onLogin;
+  final Function() onRegister;
 
-  const LoginScreen({super.key, required this.onLogin});
+  const LoginScreen({
+    super.key,
+    required this.onLogin,
+    required this.onRegister,
+  });
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -152,6 +157,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                 const SizedBox(height: 16),
+
+                TextButton(
+                  onPressed: () => widget.onRegister(),
+                  child: Text(
+                    "Belum punya akun? Daftar",
+                    style: TextStyle(color: Colors.blueAccent),
+                  ),
+                ),
               ],
             ),
           ),

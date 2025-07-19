@@ -14,19 +14,20 @@ class ApiPresensi {
       Uri.parse("$_baseUrl/presensi/check"),
       headers: {'Authorization': 'Bearer $token'},
     );
-
+    print(response.body);
     final data = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      return{
+      return {
         'next': data["jenis"],
         'batas_jam': data["batas_jam"],
+        'nama_siswa': data["nama_siswa"],
       };
     } else {
       throw Exception('Failed to check presensi');
     }
   }
 
-   Future<PresensiListResponse> indexUser([int page = 1, int size = 10]) async {
+  Future<PresensiListResponse> indexUser([int page = 1, int size = 10]) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
 

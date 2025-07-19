@@ -12,6 +12,9 @@ class PresensiProvider extends ChangeNotifier {
   String? _batasJam;
   String? get batasJam => _batasJam;
 
+  String? _namaSiswa;
+  String? get namaSiswa => _namaSiswa;
+
   String? _Message;
   String? get Message => _Message;
 
@@ -19,6 +22,7 @@ class PresensiProvider extends ChangeNotifier {
     final result = await apiPresensi.isCheck();
     _jenisPresensi = result['next'];
     _batasJam = result['batas_jam'];
+    _namaSiswa = result['nama_siswa'];
     notifyListeners();
   }
 
